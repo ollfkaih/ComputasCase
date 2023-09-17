@@ -1,16 +1,20 @@
 import React, { useRef, useState } from 'react';
-import { Button, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
-import { analyze } from '../cloud/analyze';
-import CameraPreview from './CameraPreview';
-import { styles } from './styles';
+import { analyze, Prediction } from '../cloud/analyze';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation';
+import Button from '../components/Button';
+import ResultBox from '../components/ResultBox';
 
-const CameraScreen = () => {
-  const navigation = useNavigation();
+type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
+
+const CameraScreen = ({}: Props) => {
+  const navigation = useNavigation<Props['navigation']>();
   const cameraRef = useRef(null);
   const [type, setType] = useState(CameraType.back);
-  const [prediction, setPrediction] = useState<string | 'Loading'>();
+  const [prediction, setPrediction] = useState<Prediction | 'Loading'>();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [image, setImage] = useState<CameraCapturedPicture | null>(null);
 
@@ -19,7 +23,7 @@ const CameraScreen = () => {
   const analyzePicture = async (pictureData: string) => {
     const predictions = await analyze(pictureData);
     console.log(predictions);
-    setPrediction(predictions[0].name);
+    setPrediction(predictions[0]);
   };
 
   if (!permission?.granted) {
@@ -28,7 +32,9 @@ const CameraScreen = () => {
         <Text style={{ textAlign: 'center' }}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission} title="grant permission" />
+        <Button onPress={requestPermission}>
+          <Text>grant permission</Text>
+        </Button>
       </SafeAreaView>
     );
   }
@@ -40,7 +46,6 @@ const CameraScreen = () => {
 
     const options = { quality: 0.5, base64: true };
     const data = await cameraRef.current?.takePictureAsync(options);
-    console.log(data);
     setPreviewVisible(true);
     setImage(data);
     return data?.base64;
@@ -56,60 +61,46 @@ const CameraScreen = () => {
   };
 
   return (
-    <View style={styles.flex}>
-      {previewVisible && image ? (
-        CameraPreview({
-          photo: image,
-          retakePhoto: retakePicture,
-          savePhoto: savePicture,
-        })
-      ) : (
-        <Camera style={styles.camera} type={type} ref={cameraRef}>
-          <SafeAreaView style={styles.buttonContainer}>
-            <Text style={styles.prediction}>{prediction ?? ''}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('History' as never)}
-            >
-              <Text style={styles.text}>History</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={takePicture(cameraRef)}>
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  flexDirection: 'row',
-                  flex: 1,
-                  width: '100%',
-                  padding: 20,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View
-                  style={{
-                    alignSelf: 'center',
-                    flex: 1,
-                    alignItems: 'center',
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={takePicture(cameraRef)}
-                    style={{
-                      width: 70,
-                      height: 70,
-                      bottom: 0,
-                      borderRadius: 50,
-                      backgroundColor: '#fff',
-                    }}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-          </SafeAreaView>
-        </Camera>
-      )}
-    </View>
+    <Camera style={styles.camera} type={type} ref={cameraRef}>
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.prediction}>
+          {prediction && prediction !== 'Loading' && (
+            <ResultBox trashType={prediction.trashType} />
+          )}
+        </View>
+        <View style={styles.buttonBar}>
+          <Button
+            icon="list-outline"
+            label="Tidligere bilder"
+            onPress={() => navigation.navigate('History')}
+          />
+          <Button icon="camera" label="Ta bilde" onPress={takePicture(cameraRef)} />
+        </View>
+      </SafeAreaView>
+    </Camera>
   );
 };
+
+const styles = StyleSheet.create({
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  camera: {
+    flex: 1,
+  },
+  safeAreaView: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  prediction: {},
+  buttonBar: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
+  },
+});
 
 export default CameraScreen;

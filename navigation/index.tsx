@@ -4,13 +4,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CameraScreen from '../screens/Camera';
 import HistoryScreen from '../screens/History';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Camera: undefined;
+  History: undefined | { photo: string };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Home'}>
-        <Stack.Screen name="Home" component={CameraScreen} />
+      <Stack.Navigator initialRouteName="Camera">
+        <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>

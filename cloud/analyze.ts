@@ -1,4 +1,5 @@
 import firebaseApp from './firebase';
+import { Trash } from '../components/ResultBox';
 
 const ENDPOINT_ID = '4558491645875585024';
 const TOKEN = process.env.EXPO_PUBLIC_GOOGLE_CLOUD_TOKEN;
@@ -11,10 +12,20 @@ type PredictionsData = {
   ids: string[];
 };
 
-type Prediction = {
+export type Prediction = {
   name: string;
+  trashType: Trash;
   id: string;
   confidence: number;
+};
+
+const trashMap: Record<string, Trash> = {
+  Mat: Trash.Matavfall,
+  Papir: Trash.Papir,
+  Plast: Trash.Plast,
+  Rest: Trash.Restavfall,
+  Pant: Trash.Pant,
+  NeiIkkeKastDen: Trash.NeiIkkeKastDen,
 };
 
 export const analyze = async (image: string) => {
@@ -41,10 +52,11 @@ export const analyze = async (image: string) => {
   const json = await res.json();
   const predictionData = json.predictions[0] as PredictionsData;
 
-  const predictions = [];
+  const predictions: Prediction[] = [];
   for (let i = 0; i < predictionData.ids.length; i++) {
     predictions.push({
       name: predictionData.displayNames[i],
+      trashType: trashMap[predictionData.displayNames[i]],
       id: predictionData.ids[i],
       confidence: predictionData.confidences[i],
     });
