@@ -73,7 +73,6 @@ const CameraScreen = () => {
             >
               <Text style={styles.text}>History</Text>
             </TouchableOpacity>
-            =
             <TouchableOpacity style={styles.button} onPress={takePicture(cameraRef)}>
               <View
                 style={{
