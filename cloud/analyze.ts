@@ -50,6 +50,10 @@ export const analyze = async (image: string) => {
   });
 
   const json = await res.json();
+  if (json.error) {
+    console.error(json.error);
+    return [];
+  }
   const predictionData = json.predictions[0] as PredictionsData;
 
   const predictions: Prediction[] = [];

@@ -3,10 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CameraScreen from '../screens/Camera';
 import HistoryScreen from '../screens/History';
+import { CameraCapturedPicture } from 'expo-camera';
 
 export type RootStackParamList = {
   Camera: undefined;
-  History: undefined | { photo: string };
+  History: undefined | { image: CameraCapturedPicture };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

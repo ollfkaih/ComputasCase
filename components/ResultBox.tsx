@@ -8,6 +8,7 @@ export enum Trash {
   Plast = 'Plast',
   Pant = 'Pant',
   NeiIkkeKastDen = 'Nei ikke kast den!',
+  Loading = 'Loading...',
 }
 
 export const TrashColors = {
@@ -17,6 +18,7 @@ export const TrashColors = {
   [Trash.Plast]: '#8A297E',
   [Trash.Pant]: '#151410',
   [Trash.NeiIkkeKastDen]: '#f52323',
+  [Trash.Loading]: '#888888',
 };
 
 export const TrashImages = {
@@ -26,24 +28,27 @@ export const TrashImages = {
   [Trash.Plast]: require('../assets/icons/Plast.png'),
   [Trash.Pant]: require('../assets/icons/Pant.png'),
   [Trash.NeiIkkeKastDen]: require('../assets/icons/NeiIkkeKastDen.png'),
+  [Trash.Loading]: require('../assets/icons/Loading.png'),
 };
 
 interface ResultBoxProps {
   trashType: Trash;
+  imageUri?: string;
 }
 
-const ResultBox: React.FC<ResultBoxProps> = ({ trashType }) => {
+const ResultBox: React.FC<ResultBoxProps> = ({ trashType, imageUri }) => {
   return (
     <View style={[styles.container, { backgroundColor: TrashColors[trashType] }]}>
       <Image style={styles.icon} source={TrashImages[trashType]} />
       <Text style={styles.text}>{trashType}</Text>
-      <Image style={styles.image} source={require('../assets/cookie.png')} />
+      {imageUri && <Image style={styles.image} source={{ uri: imageUri }} />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
