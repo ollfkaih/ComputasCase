@@ -1,25 +1,20 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, View } from "react-native";
-import RandomImageView from "./Views/RandomImageView";
+import { SafeAreaView, StyleSheet } from 'react-native';
+import Navigation from './navigation';
 
-const App = () => {
+export default function App() {
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
-        <RandomImageView />
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Navigation />
+      {/*<StatusBar style="auto" />*/}
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#d28cff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
-
-export default App;
