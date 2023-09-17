@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import RandomImageView from "./Views/RandomImageView";
 
-export default function App() {
+const App = () => {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <SafeAreaView>
+        <RandomImageView />
+        <StatusBar style="auto" />
+      </SafeAreaView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#d28cff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
+
+export default App;
