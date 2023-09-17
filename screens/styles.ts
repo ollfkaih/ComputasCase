@@ -10,8 +10,6 @@ export const styles = StyleSheet.create({
   permissionContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   buttonContainer: {
     flex: 1,
@@ -47,5 +45,6 @@ export const styles = StyleSheet.create({
     padding: 20,
     color: 'white',
     textAlign: 'center',
+    width: '100%',
   },
 });
