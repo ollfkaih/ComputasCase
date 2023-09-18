@@ -13,17 +13,17 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function Navigation() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Camera">
-        <Stack.Screen
-          name="Camera"
-          component={CameraScreen}
-          options={{ headerShown: false }} // Hide the header
-        />
-        <Stack.Screen name="History" component={HistoryScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+const Navigation = () => (
+  <NavigationContainer>
+    <Stack.Navigator initialRouteName="Camera">
+      <Stack.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{ headerShown: false }} // Hide the header
+      />
+      <Stack.Screen name="History" component={HistoryScreen} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
+
+export default Navigation;

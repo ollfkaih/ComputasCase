@@ -3,7 +3,8 @@ import * as tf from '@tensorflow/tfjs';
 import { Tensor3D } from '@tensorflow/tfjs';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { Prediction } from '../cloud/analyze';
-import { Trash } from '../components/ResultBox';
+
+import { Trash } from '../types';
 
 const modelJson = require('../tensorflow/model.json');
 const modelWeights1 = require('../tensorflow/group1-shard1of3.bin');

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { Trash, TrashImages } from './ResultBox';
+import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+
+import { Trash, TrashImages } from '../types';
 
 interface Props {
   trashType: Trash;

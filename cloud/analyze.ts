@@ -1,5 +1,6 @@
 import firebaseApp from './firebase';
-import { Trash } from '../components/ResultBox';
+
+import { Trash } from '../types';
 
 const ENDPOINT_ID = '5641607356258189312';
 const TOKEN = process.env.EXPO_PUBLIC_GOOGLE_CLOUD_TOKEN;
