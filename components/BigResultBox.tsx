@@ -5,32 +5,54 @@ import Pill from './Pill';
 // import {styles} from "../screens/styles";
 
 interface BigResultBoxProps {
-  trashType: Trash;
   imageUri?: string;
-  trashData: Map<Trash, number>;
-  pills?: Array<{ trashType: Trash; percentage: number }>;
+  trashData: TrashItem[];
 }
 
-const BigResultBox: React.FC<BigResultBoxProps> = ({
-  trashType,
-  imageUri,
-  trashData,
-  pills,
-}) => {
+export interface trashData {
+  trashData: Map<Trash, number>;
+}
+
+interface TrashItem {
+  confidence: number;
+  id: string;
+  name: string;
+  trashType: Trash | string;
+}
+
+function convertToTrashEnum(value: string): Trash {
+  if (Object.values(Trash).includes(value as Trash)) {
+    return value as Trash;
+  }
+  // You can throw an error, return a default value, or handle it in other ways if the value isn't a valid Trash type
+  throw new Error(`Invalid trash type: ${value}`);
+}
+
+const BigResultBox: React.FC<BigResultBoxProps> = ({ imageUri, trashData }) => {
+  const pills = trashData
+    .map((item) => ({
+      trashType: convertToTrashEnum(item.trashType),
+      percentage: Math.round(item.confidence * 100),
+    }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  // Extract main trash type
+  const mainTrashType = pills[0]?.trashType;
+  const mainTrashPercentage = pills[0]?.percentage;
+
   return (
-    <View style={[styles.container, { backgroundColor: TrashColors[trashType] }]}>
+    <View style={[styles.container, { backgroundColor: TrashColors[mainTrashType] }]}>
       {imageUri && <Image style={styles.mainImage} source={{ uri: imageUri }} />}
 
       <View style={styles.infoRow}>
-        <Image style={styles.icon} source={TrashImages[trashType]} />
-        <Text style={styles.text}>{trashType}</Text>
-        <Text style={styles.dataText}>{trashData.get(trashType)}%</Text>
+        <Image style={styles.icon} source={TrashImages[mainTrashType]} />
+        <Text style={styles.text}>{mainTrashType}</Text>
+        <Text style={styles.dataText}>{mainTrashPercentage.toFixed(2)}%</Text>
       </View>
 
       <View style={styles.pillsContainer}>
         {pills
-          ?.filter((pill) => pill.trashType !== trashType)
-          .slice(0, 3)
+          .slice(1, 4) // Exclude main trash type and take next three
           .map((pill, index) => (
             <Pill key={index} trashType={pill.trashType} percentage={pill.percentage} />
           ))}
