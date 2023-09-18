@@ -9,6 +9,7 @@ import ResultBox from '../components/ResultBox';
 import { useTfClassification } from '../hooks/useTfClassification';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import { Tensor3D } from '@tensorflow/tfjs';
+import ShutterButton from '../components/ShutterButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
 
@@ -111,7 +112,7 @@ const CameraScreen = ({}: Props) => {
             label="Tidligere bilder"
             onPress={() => navigation.navigate('History')}
           />
-          <Button icon="camera" label="Ta bilde" onPress={takePicture(cameraRef)} />
+          <ShutterButton onPress={takePicture(cameraRef)} />
         </View>
       </SafeAreaView>
     </View>
@@ -128,11 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     zIndex: 0,
   },
   safeAreaView: {
