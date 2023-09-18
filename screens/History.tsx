@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
+import BigResultBox from '../components/BigResultBox';
 
 const maxSizeInBytes = 1.4 * 1024 * 1024;
 
@@ -40,12 +41,12 @@ const compressImageToMeetSize = async (uri, compression = 1.0) => {
 type Props = NativeStackScreenProps<RootStackParamList, 'History'>;
 
 const HistoryScreen = ({ route: { params } }: Props) => {
-  const [prediction, setPrediction] = useState<Prediction | 'Loading'>('Loading');
+  const [predictions, setPredictions] = useState<Prediction[] | 'Loading'>('Loading');
   const image = params?.image;
 
   const analyzePicture = async (pictureData: string) => {
     const predictions = await analyze(pictureData);
-    setPrediction(predictions[0]);
+    setPredictions(predictions);
   };
 
   useEffect(() => {
@@ -61,13 +62,16 @@ const HistoryScreen = ({ route: { params } }: Props) => {
     convertUriToBase64AndAnalyze();
   }, [image]);
 
+  console.log('PRED:' + predictions);
+
   return (
     <SafeAreaView style={styles.container}>
       {image && (
         <View>
           <Text>Current trash 🗑️</Text>
-          {prediction !== 'Loading' ? (
-            <ResultBox trashType={prediction?.trashType} imageUri={image.uri} />
+          {/*<BigResultBox trashData={demoData} imageUri={image.uri} />*/}
+          {predictions !== 'Loading' ? (
+            <BigResultBox trashData={predictions} imageUri={image.uri} />
           ) : (
             <ResultBox trashType={Trash.Loading} imageUri={image.uri} />
           )}
@@ -76,17 +80,7 @@ const HistoryScreen = ({ route: { params } }: Props) => {
       <Text>
         All the trash you've scanned will be displayed here. You can click on a trash item
         to see more information about it. The information will be displayed in a modal.
-        The modal will have a button to close it. The modal will have a button to add the
-        trash item to your inventory. The modal will have a button to add the trash item
-        to your inventory. The modal will have a button to add the trash item to your
-        inventory. The modal will have a button to add the trash item to your inventory.
-        The modal will have a button to add the trash item to your inventory. The modal
-        will have a button to add the trash item to your inventory. The modal will have a
-        button to add the trash item to your inventory. The modal will have a button to
-        add the trash item to your inventory. The modal will have a button to add the
-        trash item to your inventory. The modal will have a button to add the waste item
-        to your inventory. The modal will have a button to add the waste item to your
-        inventory. The modal will have a button to add the waste item to your inventory.
+        The modal will have a button to close it.
       </Text>
     </SafeAreaView>
   );

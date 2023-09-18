@@ -47,7 +47,7 @@ const BigResultBox: React.FC<BigResultBoxProps> = ({ imageUri, trashData }) => {
       <View style={styles.infoRow}>
         <Image style={styles.icon} source={TrashImages[mainTrashType]} />
         <Text style={styles.text}>{mainTrashType}</Text>
-        <Text style={styles.dataText}>{mainTrashPercentage.toFixed(2)}%</Text>
+        <Text style={styles.dataText}>{mainTrashPercentage.toFixed(0)}%</Text>
       </View>
 
       <View style={styles.pillsContainer}>
