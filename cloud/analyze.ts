@@ -29,7 +29,6 @@ const trashMap: Record<string, Trash> = {
 };
 
 export const analyze = async (image: string) => {
-  console.info(url);
   const request = {
     instances: [
       {

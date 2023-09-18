@@ -95,8 +95,6 @@ const CameraScreen = ({}: Props) => {
       quality: 1,
     });
 
-    console.log(result.assets[0]);
-
     if (!result.canceled) {
       // get base64 string of the image and navigate to history screen
       navigation.navigate('History', { image: result.assets[0] });
@@ -139,11 +137,11 @@ const CameraScreen = ({}: Props) => {
         <View style={styles.buttonBar}>
           <Button
             icon="list-outline"
-            label="Tidligere bilder"
+            label=""
             onPress={() => navigation.navigate('History')}
           />
           <ShutterButton onPress={takePicture(cameraRef)} />
-          <Button icon="image" label="Velg bilder" onPress={pickImage} />
+          <Button icon="image" label="" onPress={pickImage} />
         </View>
       </SafeAreaView>
     </View>
@@ -174,8 +172,9 @@ const styles = StyleSheet.create({
   prediction: {},
   buttonBar: {
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-around',
+    width: '60%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

@@ -24,6 +24,7 @@ const Button = ({ children, onPress, type = 'primary', label, icon }: ButtonProp
 const styles = StyleSheet.create({
   button: {
     padding: 10,
+    height: 50,
     borderWidth: 3,
     borderRadius: 8,
     flexDirection: 'row',
@@ -38,9 +39,7 @@ const styles = StyleSheet.create({
     borderColor: '#C88FF8',
   },
 
-  icon: {
-    marginRight: 10,
-  },
+  icon: {},
   text: {
     fontSize: 20,
   },

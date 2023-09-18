@@ -14,14 +14,14 @@ interface ButtonProps {
 const Button = ({ children, onPress }: ButtonProps) => {
   return (
     <TouchableOpacity style={{ ...styles.button }} onPress={onPress}>
-      <Ionicons size={50} name="ios-radio-button-on" color={'#ebe7ee'} />
+      <Ionicons size={100} name="ios-radio-button-on" color={'#ebe7ee'} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
+    paddingHorizontal: 40,
     borderWidth: 0,
     borderRadius: 0,
   },
