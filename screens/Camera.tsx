@@ -1,5 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -32,6 +41,7 @@ const speak = async (thingToSay: string) => {
 };
 
 const CameraScreen = ({}: Props) => {
+  const [loading, setLoading] = useState(true);
   const [blurred, setBlurred] = useState(false);
   const navigation = useNavigation<Props['navigation']>();
   const cameraRef = useRef(null);
@@ -137,6 +147,17 @@ const CameraScreen = ({}: Props) => {
 
   return (
     <View style={styles.container}>
+      {loading && (
+        <TouchableOpacity
+          onPress={() => setLoading(false)}
+          style={styles.loadingContainer}
+        >
+          <Image
+            style={styles.loadingContainer}
+            source={require('../assets/tapToStart.png')}
+          />
+        </TouchableOpacity>
+      )}
       <View style={styles.cameraContainer}>
         <TensorCamera
           style={styles.camera}
@@ -183,6 +204,12 @@ const styles = StyleSheet.create({
   camera: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 0,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    zIndex: 101,
   },
   cameraContainer: {
     height: '100%',

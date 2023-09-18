@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Trash, TrashColors, TrashImages } from './ResultBox';
 import Pill from './Pill';
+
 // import {styles} from "../screens/styles";
 
 interface BigResultBoxProps {
@@ -47,7 +48,7 @@ const BigResultBox: React.FC<BigResultBoxProps> = ({ imageUri, trashData }) => {
       <View style={styles.infoRow}>
         <Image style={styles.icon} source={TrashImages[mainTrashType]} />
         <Text style={styles.text}>{mainTrashType}</Text>
-        <Text style={styles.dataText}>{mainTrashPercentage.toFixed(0)}%</Text>
+        <Text style={styles.dataText}>{mainTrashPercentage?.toFixed(0)}%</Text>
       </View>
 
       <View style={styles.pillsContainer}>
