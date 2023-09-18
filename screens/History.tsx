@@ -51,17 +51,11 @@ const HistoryScreen = ({ route: { params } }: Props) => {
   useEffect(() => {
     const convertUriToBase64AndAnalyze = async () => {
       if (image) {
-        if (image.base64) {
-          analyzePicture(image.base64);
-        } else if (image.uri) {
-          const resizedImage = await compressImageToMeetSize(image.uri);
-          const base64Data = await FileSystem.readAsStringAsync(resizedImage.uri, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          analyzePicture(base64Data);
-        } else {
-          console.error('Image has no uri or base64');
-        }
+        const resizedImage = await compressImageToMeetSize(image.uri);
+        const base64Data = await FileSystem.readAsStringAsync(resizedImage.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        analyzePicture(base64Data);
       }
     };
     convertUriToBase64AndAnalyze();

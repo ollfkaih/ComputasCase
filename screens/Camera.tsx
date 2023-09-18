@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -104,8 +104,8 @@ const CameraScreen = ({}: Props) => {
   let textureDims;
   if (Platform.OS === 'ios') {
     textureDims = {
-      height: 1920,
-      width: 1080,
+      height: Dimensions.get('window').height,
+      width: Dimensions.get('window').width,
     };
   } else {
     textureDims = {
@@ -116,20 +116,22 @@ const CameraScreen = ({}: Props) => {
 
   return (
     <View style={styles.container}>
-      <TensorCamera
-        style={styles.camera}
-        type={type}
-        ref={cameraRef}
-        // Tensor related props
-        resizeHeight={224}
-        resizeWidth={224}
-        cameraTextureHeight={textureDims.height}
-        cameraTextureWidth={textureDims.width}
-        resizeDepth={3}
-        onReady={handleCameraStream}
-        autorender={true}
-        useCustomShadersToResize={false}
-      />
+      <View style={styles.cameraContainer}>
+        <TensorCamera
+          style={styles.camera}
+          type={type}
+          ref={cameraRef}
+          // Tensor related props
+          resizeHeight={224}
+          resizeWidth={224}
+          cameraTextureHeight={textureDims.height}
+          cameraTextureWidth={textureDims.width}
+          resizeDepth={3}
+          onReady={handleCameraStream}
+          autorender={true}
+          useCustomShadersToResize={false}
+        />
+      </View>
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.prediction}>
           {localPredictions && <ResultBox trashType={localPredictions[0].trashType} />}
@@ -160,6 +162,10 @@ const styles = StyleSheet.create({
   camera: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 0,
+  },
+  cameraContainer: {
+    height: '100%',
+    aspectRatio: 9 / 16,
   },
   safeAreaView: {
     position: 'absolute',
