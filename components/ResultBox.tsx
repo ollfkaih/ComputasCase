@@ -20,10 +20,12 @@ const ResultBox: React.FC<ResultBoxProps> = ({
       {imageUri ? (
         <Image style={styles.image} source={{ uri: imageUri }} />
       ) : (
-        <Image
-          style={styles.image}
-          source={{ uri: `data:image/png;base64,${base64Image}` }}
-        />
+        base64Image && (
+          <Image
+            style={styles.image}
+            source={{ uri: `data:image/png;base64,${base64Image}` }}
+          />
+        )
       )}
     </View>
   );
