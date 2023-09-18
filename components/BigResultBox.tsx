@@ -54,6 +54,8 @@ const BigResultBox: React.FC<BigResultBoxProps> = ({ imageUri, trashData }) => {
       <View style={styles.pillsContainer}>
         {pills
           .slice(1, 4) // Exclude main trash type and take next three
+          .filter((pill) => pill.percentage > 10) // Only show pills with more than 10% confidence
+          .reverse()
           .map((pill, index) => (
             <Pill key={index} trashType={pill.trashType} percentage={pill.percentage} />
           ))}

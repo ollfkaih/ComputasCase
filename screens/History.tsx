@@ -64,15 +64,12 @@ const HistoryScreen = ({ route: { params } }: Props) => {
         const base64Data = await FileSystem.readAsStringAsync(resizedImage.uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-
-        console.error('START', base64Data, 'END');
         analyzePicture(base64Data);
       }
     };
     convertUriToBase64AndAnalyze();
   }, [image, historicTrash]);
 
-  console.log('test');
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
