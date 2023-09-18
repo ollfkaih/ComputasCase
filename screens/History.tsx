@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { analyze, Prediction } from '../cloud/analyze';
-import ResultBox, { Trash } from '../components/ResultBox';
+import ResultBox from '../components/ResultBox';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import BigResultBox from '../components/BigResultBox';
+import { Trash } from '../types';
+import { TrashContext } from '../TrashContext';
 
 const maxSizeInBytes = 1.4 * 1024 * 1024;
 
@@ -44,9 +46,15 @@ const HistoryScreen = ({ route: { params } }: Props) => {
   const [predictions, setPredictions] = useState<Prediction[] | 'Loading'>('Loading');
   const image = params?.image;
 
+  const historicTrash = useContext(TrashContext);
+
   const analyzePicture = async (pictureData: string) => {
     const predictions = await analyze(pictureData);
     setPredictions(predictions);
+    historicTrash.push({
+      type: predictions[0].trashType,
+      image: image,
+    });
   };
 
   useEffect(() => {
@@ -56,32 +64,39 @@ const HistoryScreen = ({ route: { params } }: Props) => {
         const base64Data = await FileSystem.readAsStringAsync(resizedImage.uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
+
+        console.error('START', base64Data, 'END');
         analyzePicture(base64Data);
       }
     };
     convertUriToBase64AndAnalyze();
-  }, [image]);
+  }, [image, historicTrash]);
 
-  console.log('PRED:' + predictions);
-
+  console.log('test');
   return (
     <SafeAreaView style={styles.container}>
-      {image && (
-        <View>
-          <Text>Current trash 🗑️</Text>
-          {/*<BigResultBox trashData={demoData} imageUri={image.uri} />*/}
-          {predictions !== 'Loading' ? (
-            <BigResultBox trashData={predictions} imageUri={image.uri} />
-          ) : (
-            <ResultBox trashType={Trash.Loading} imageUri={image.uri} />
-          )}
-        </View>
-      )}
-      <Text>
-        All the trash you've scanned will be displayed here. You can click on a trash item
-        to see more information about it. The information will be displayed in a modal.
-        The modal will have a button to close it.
-      </Text>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
+        {image && (
+          <View style={styles.screenWidth}>
+            {/*<Text>Current trash 🗑️</Text>*/}
+            {predictions !== 'Loading' ? (
+              <BigResultBox trashData={predictions} imageUri={image.uri} />
+            ) : (
+              <ResultBox trashType={Trash.Loading} imageUri={image.uri} />
+            )}
+          </View>
+        )}
+
+        {historicTrash.map((trash, index) => (
+          <View style={styles.screenWidth} key={index}>
+            <ResultBox
+              trashType={trash.type}
+              imageUri={trash.image?.uri}
+              base64Image={trash.image?.base64}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -92,6 +107,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollViewContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16, // You can adjust this for padding inside the ScrollView
+  },
+  screenWidth: {
+    width: Dimensions.get('window').width - 32, // Adjust this for the width of the ScrollView
   },
 });
 

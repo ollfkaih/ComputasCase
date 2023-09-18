@@ -14,13 +14,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import Button from '../components/Button';
-import ResultBox, { Trash } from '../components/ResultBox';
+import ResultBox from '../components/ResultBox';
 import { useTfClassification } from '../hooks/useTfClassification';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import { Tensor3D } from '@tensorflow/tfjs';
 import ShutterButton from '../components/ShutterButton';
 import * as ImagePicker from 'expo-image-picker';
 import * as Speech from 'expo-speech';
+import { Trash } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { Trash, TrashColors, TrashImages } from './ResultBox';
 import Pill from './Pill';
+import { Trash, TrashColors, TrashImages } from '../types';
 
 // import {styles} from "../screens/styles";
 

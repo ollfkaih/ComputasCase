@@ -1,47 +1,30 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { Trash, TrashColors, TrashImages } from '../types';
 
-export enum Trash {
-  Matavfall = 'Matavfall',
-  Restavfall = 'Restavfall',
-  Papir = 'Papir',
-  Plast = 'Plast',
-  Pant = 'Pant',
-  NeiIkkeKastDen = 'Nei ikke kast den!',
-  Loading = 'Loading...',
-}
-
-export const TrashColors = {
-  [Trash.Matavfall]: '#4CA75E',
-  [Trash.Restavfall]: '#000',
-  [Trash.Papir]: '#3880B9',
-  [Trash.Plast]: '#8A297E',
-  [Trash.Pant]: '#151410',
-  [Trash.NeiIkkeKastDen]: '#f52323',
-  [Trash.Loading]: '#888888',
-};
-
-export const TrashImages = {
-  [Trash.Matavfall]: require('../assets/icons/Matavfall.png'),
-  [Trash.Restavfall]: require('../assets/icons/Restavfall.png'),
-  [Trash.Papir]: require('../assets/icons/Papp.png'),
-  [Trash.Plast]: require('../assets/icons/Plast.png'),
-  [Trash.Pant]: require('../assets/icons/Pant.png'),
-  [Trash.NeiIkkeKastDen]: require('../assets/icons/NeiIkkeKastDen.png'),
-  [Trash.Loading]: require('../assets/icons/Loading.png'),
-};
-
-interface ResultBoxProps {
+type ResultBoxProps = {
   trashType: Trash;
+  base64Image?: string;
   imageUri?: string;
-}
+};
 
-const ResultBox: React.FC<ResultBoxProps> = ({ trashType, imageUri }) => {
+const ResultBox: React.FC<ResultBoxProps> = ({
+  trashType,
+  imageUri,
+  base64Image,
+}: ResultBoxProps) => {
   return (
     <View style={[styles.container, { backgroundColor: TrashColors[trashType] }]}>
       <Image style={styles.icon} source={TrashImages[trashType]} />
       <Text style={styles.text}>{trashType}</Text>
-      {imageUri && <Image style={styles.image} source={{ uri: imageUri }} />}
+      {imageUri ? (
+        <Image style={styles.image} source={{ uri: imageUri }} />
+      ) : (
+        <Image
+          style={styles.image}
+          source={{ uri: `data:image/png;base64,${base64Image}` }}
+        />
+      )}
     </View>
   );
 };
