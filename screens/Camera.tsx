@@ -9,6 +9,8 @@ import ResultBox from '../components/ResultBox';
 import { useTfClassification } from '../hooks/useTfClassification';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import { Tensor3D } from '@tensorflow/tfjs';
+import ShutterButton from '../components/ShutterButton';
+import * as ImagePicker from 'expo-image-picker';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
 
@@ -30,17 +32,30 @@ const CameraScreen = ({}: Props) => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
   const localPredictions = useTfClassification(imageTensor, !blurred);
 
   const handleCameraStream = useMemo(
     () => (images) => {
+      const delay = 1000;
       const loop = async () => {
         const tensor = images.next().value;
         if (tensor) {
           imageTensor.current = tensor;
         }
-
-        requestAnimationFrame(loop);
+        setTimeout(() => {
+          requestAnimationFrame(loop);
+        }, delay);
       };
       loop();
     },
@@ -70,6 +85,22 @@ const CameraScreen = ({}: Props) => {
     const options = { quality: 0.5, base64: true };
     const data = await cameraRef.current?.camera.takePictureAsync(options);
     navigation.navigate('History', { image: data });
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result.assets[0]);
+
+    if (!result.canceled) {
+      // get base64 string of the image and navigate to history screen
+      navigation.navigate('History', { image: result.assets[0] });
+    }
   };
 
   let textureDims;
@@ -111,7 +142,8 @@ const CameraScreen = ({}: Props) => {
             label="Tidligere bilder"
             onPress={() => navigation.navigate('History')}
           />
-          <Button icon="camera" label="Ta bilde" onPress={takePicture(cameraRef)} />
+          <ShutterButton onPress={takePicture(cameraRef)} />
+          <Button icon="image" label="Velg bilder" onPress={pickImage} />
         </View>
       </SafeAreaView>
     </View>
@@ -128,11 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     zIndex: 0,
   },
   safeAreaView: {

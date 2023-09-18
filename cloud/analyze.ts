@@ -1,7 +1,7 @@
 import firebaseApp from './firebase';
 import { Trash } from '../components/ResultBox';
 
-const ENDPOINT_ID = '4558491645875585024';
+const ENDPOINT_ID = '5641607356258189312';
 const TOKEN = process.env.EXPO_PUBLIC_GOOGLE_CLOUD_TOKEN;
 
 const url = `https://europe-west4-aiplatform.googleapis.com/v1/projects/${firebaseApp.options.messagingSenderId}/locations/europe-west4/endpoints/${ENDPOINT_ID}:predict`;
@@ -29,6 +29,7 @@ const trashMap: Record<string, Trash> = {
 };
 
 export const analyze = async (image: string) => {
+  console.info(url);
   const request = {
     instances: [
       {
