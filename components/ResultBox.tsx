@@ -12,7 +12,7 @@ export enum Trash {
 }
 
 export const TrashColors = {
-  [Trash.Matavfall]: '#479E55',
+  [Trash.Matavfall]: '#4CA75E',
   [Trash.Restavfall]: '#000',
   [Trash.Papir]: '#3880B9',
   [Trash.Plast]: '#8A297E',
