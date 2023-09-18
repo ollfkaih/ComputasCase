@@ -5,16 +5,31 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import Button from '../components/Button';
-import ResultBox from '../components/ResultBox';
+import ResultBox, { Trash } from '../components/ResultBox';
 import { useTfClassification } from '../hooks/useTfClassification';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import { Tensor3D } from '@tensorflow/tfjs';
 import ShutterButton from '../components/ShutterButton';
 import * as ImagePicker from 'expo-image-picker';
+import * as Speech from 'expo-speech';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
 
 const TensorCamera = cameraWithTensors(Camera);
+
+const speakMap = {
+  [Trash.Restavfall]: 'Restavfall',
+  [Trash.Matavfall]: 'Matavfall',
+  [Trash.Papir]: 'Papir',
+  [Trash.Plast]: 'Plast',
+  [Trash.Pant]: 'Pant',
+  [Trash.NeiIkkeKastDen]: 'Nei, ikke kast den!',
+};
+
+const speak = async (thingToSay: string) => {
+  await Speech.stop();
+  Speech.speak(thingToSay, { language: 'no' });
+};
 
 const CameraScreen = ({}: Props) => {
   const [blurred, setBlurred] = useState(false);
@@ -44,6 +59,12 @@ const CameraScreen = ({}: Props) => {
   }, []);
 
   const localPredictions = useTfClassification(imageTensor, !blurred);
+
+  useEffect(() => {
+    if (localPredictions?.[0]?.trashType) {
+      speak(speakMap[localPredictions[0].trashType]);
+    }
+  }, [localPredictions?.[0]?.trashType]);
 
   const handleCameraStream = useMemo(
     () => (images) => {
