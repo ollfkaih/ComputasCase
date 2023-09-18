@@ -35,13 +35,15 @@ const CameraScreen = ({}: Props) => {
 
   const handleCameraStream = useMemo(
     () => (images) => {
+      const delay = 1000;
       const loop = async () => {
         const tensor = images.next().value;
         if (tensor) {
           imageTensor.current = tensor;
         }
-
-        requestAnimationFrame(loop);
+        setTimeout(() => {
+          requestAnimationFrame(loop);
+        }, delay);
       };
       loop();
     },
