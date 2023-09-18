@@ -33,7 +33,7 @@ const ResultBox: React.FC<ResultBoxProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '98%',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,

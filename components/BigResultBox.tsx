@@ -64,7 +64,7 @@ const BigResultBox: React.FC<BigResultBoxProps> = ({ imageUri, trashData }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '98%',
     padding: 10,
     backgroundColor: '#f5f5f5',
     borderRadius: 8,
