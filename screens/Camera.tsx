@@ -10,6 +10,7 @@ import { useTfClassification } from '../hooks/useTfClassification';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import { Tensor3D } from '@tensorflow/tfjs';
 import ShutterButton from '../components/ShutterButton';
+import * as ImagePicker from 'expo-image-picker';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
 
@@ -30,6 +31,17 @@ const CameraScreen = ({}: Props) => {
       setBlurred(false);
     });
   }, [navigation]);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
 
   const localPredictions = useTfClassification(imageTensor, !blurred);
 
@@ -75,6 +87,22 @@ const CameraScreen = ({}: Props) => {
     navigation.navigate('History', { image: data });
   };
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result.assets[0]);
+
+    if (!result.canceled) {
+      // get base64 string of the image and navigate to history screen
+      navigation.navigate('History', { image: result.assets[0] });
+    }
+  };
+
   let textureDims;
   if (Platform.OS === 'ios') {
     textureDims = {
@@ -115,6 +143,7 @@ const CameraScreen = ({}: Props) => {
             onPress={() => navigation.navigate('History')}
           />
           <ShutterButton onPress={takePicture(cameraRef)} />
+          <Button icon="image" label="Velg bilder" onPress={pickImage} />
         </View>
       </SafeAreaView>
     </View>

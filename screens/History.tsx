@@ -4,6 +4,38 @@ import { analyze, Prediction } from '../cloud/analyze';
 import ResultBox, { Trash } from '../components/ResultBox';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
+
+const maxSizeInBytes = 1.4 * 1024 * 1024;
+
+const compressAndConvertToBase64 = async (uri, compression) => {
+  const compressedImage = await ImageManipulator.manipulateAsync(uri, [], {
+    compress: compression,
+    format: ImageManipulator.SaveFormat.JPEG,
+  });
+  const base64Image = await FileSystem.readAsStringAsync(compressedImage.uri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  return { compressedImage, base64ImageLength: base64Image.length };
+};
+
+const compressImageToMeetSize = async (uri, compression = 1.0) => {
+  let base64ImageLength: number, compressedImage;
+
+  while (true) {
+    ({ compressedImage, base64ImageLength } = await compressAndConvertToBase64(
+      uri,
+      compression
+    ));
+    if (base64ImageLength <= maxSizeInBytes || compression <= 0.1) {
+      break;
+    }
+    compression /= 2;
+  }
+
+  return compressedImage;
+};
 
 type Props = NativeStackScreenProps<RootStackParamList, 'History'>;
 
@@ -17,9 +49,22 @@ const HistoryScreen = ({ route: { params } }: Props) => {
   };
 
   useEffect(() => {
-    if (image) {
-      analyzePicture(image.base64);
-    }
+    const convertUriToBase64AndAnalyze = async () => {
+      if (image) {
+        if (image.base64) {
+          analyzePicture(image.base64);
+        } else if (image.uri) {
+          const resizedImage = await compressImageToMeetSize(image.uri);
+          const base64Data = await FileSystem.readAsStringAsync(resizedImage.uri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          analyzePicture(base64Data);
+        } else {
+          console.error('Image has no uri or base64');
+        }
+      }
+    };
+    convertUriToBase64AndAnalyze();
   }, [image]);
 
   return (

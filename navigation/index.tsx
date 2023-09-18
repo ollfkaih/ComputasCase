@@ -4,10 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CameraScreen from '../screens/Camera';
 import HistoryScreen from '../screens/History';
 import { CameraCapturedPicture } from 'expo-camera';
+import { ImagePickerAsset } from 'expo-image-picker/src/ImagePicker.types';
 
 export type RootStackParamList = {
   Camera: undefined;
-  History: undefined | { image: CameraCapturedPicture };
+  History: undefined | { image: CameraCapturedPicture | ImagePickerAsset };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
