@@ -1,5 +1,6 @@
 Mat
 Pant
 Papir
+NeiIkkeKastDen
 Plast
 Rest

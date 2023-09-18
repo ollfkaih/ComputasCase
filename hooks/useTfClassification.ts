@@ -62,16 +62,22 @@ export const useTfClassification = (
           confidence: data[2],
         },
         {
+          name: 'NeiIkkeKastDen',
+          id: '1',
+          trashType: Trash.NeiIkkeKastDen,
+          confidence: data[3],
+        },
+        {
           name: 'Plast',
           id: '1',
           trashType: Trash.Plast,
-          confidence: data[3],
+          confidence: data[4],
         },
         {
           name: 'Rest',
           id: '1',
           trashType: Trash.Restavfall,
-          confidence: data[4],
+          confidence: data[5],
         },
       ];
 
